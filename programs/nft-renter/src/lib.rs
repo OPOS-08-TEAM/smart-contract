@@ -1,4 +1,8 @@
+pub mod helpers;
+pub mod instructions;
+
 use anchor_lang::prelude::*;
+use instructions::*;
 
 declare_id!("UdJoMb9zUSkAysoSnuxJB2x5k8bn8AqgsS1BaEqTroE");
 
@@ -10,6 +14,3 @@ pub mod nft_renter {
         Ok(())
     }
 }
-
-#[derive(Accounts)]
-pub struct Initialize {}
