@@ -13,4 +13,20 @@ pub mod nft_renter {
     pub fn initialize(ctx: Context<Initialize>) -> Result<()> {
         Ok(())
     }
+
+    pub fn list_nft (ctx: Context<Initialize>) -> Result<()> {
+        Ok(())
+    }
+
+    pub fn delist_nft (ctx: Context<Initialize>) -> Result<()> {
+        Ok(())
+    }
+
+    pub fn rent_nft(ctx: Context<Initialize>) -> Result<()> {
+        Ok(())
+    }
+
+    pub fn charge_fee_and_send_nft_back(ctx: Context<Initialize>) -> Result<()> { 
+        Ok(())
+    }
 }
