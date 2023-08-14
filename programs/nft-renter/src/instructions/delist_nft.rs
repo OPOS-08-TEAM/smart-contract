@@ -12,7 +12,7 @@ use anchor_spl::token::{ self, Token, TokenAccount, Mint, Transfer };
 pub struct DelistNft<'info> {
     // Check account seed and init if required
     #[account(
-        mut, seeds=[b"stake_info", initializer.key().as_ref(), mint.key().as_ref()], bump,
+        mut, seeds=[LIST_INFO_SEED, initializer.key().as_ref(), mint.key().as_ref()], bump,
         constraint = initializer.key() == list_info.lister,
         close = initializer
     )]

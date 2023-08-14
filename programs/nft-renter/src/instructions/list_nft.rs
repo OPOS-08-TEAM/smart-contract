@@ -13,12 +13,13 @@ pub struct ListNft<'info> {
     #[account(
         init_if_needed, 
         seeds = [
-            b"list_info", 
+            LIST_INFO_SEED, 
             initializer.key().as_ref(), 
-            mint.key().as_ref()], 
-            bump, 
-            payer = initializer, 
-            space= std::mem::size_of::<UserListInfo>() + 8 
+            mint.key().as_ref()
+        ], 
+        bump, 
+        payer = initializer, 
+        space = std::mem::size_of::<UserListInfo>() + 8 
     )]
     pub list_info: Account<'info, UserListInfo>,
 
@@ -65,7 +66,7 @@ pub fn list_nft(ctx: Context<ListNft>) -> Result<()> {
     let token_transfer_context: CpiContext<'_, '_, '_, '_, Transfer<'_>> = CpiContext::new(cpi_program, cpi_accounts);
     token::transfer(token_transfer_context, 1)?;
 
-    // Populate staking_info info
+    // Populate list_info info
     ctx.accounts.list_info.mint = ctx.accounts.mint.key();
     ctx.accounts.list_info.lister = ctx.accounts.initializer.key();
 
