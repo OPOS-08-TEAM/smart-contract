@@ -12,7 +12,13 @@ use anchor_spl::token::{ self, Token, TokenAccount, Mint, Transfer };
 pub struct DelistNft<'info> {
     // Check account seed and init if required
     #[account(
-        mut, seeds=[LIST_INFO_SEED, initializer.key().as_ref(), mint.key().as_ref()], bump,
+        mut, 
+        seeds = [
+            LIST_INFO_SEED, 
+            initializer.key().as_ref(), 
+            mint.key().as_ref()
+        ], 
+        bump,
         constraint = initializer.key() == list_info.lister,
         close = initializer
     )]
@@ -49,7 +55,7 @@ pub fn delist_nft(ctx: Context<DelistNft>) -> Result<()> {
     // Proceed to transfer
     let auth_bump = *ctx.bumps.get("list_info").unwrap();
     let seeds = &[
-        b"stake_info".as_ref(),
+        b"list_info".as_ref(),
         &ctx.accounts.initializer.key().to_bytes(),
         &ctx.accounts.mint.key().to_bytes(),
         &[auth_bump],
