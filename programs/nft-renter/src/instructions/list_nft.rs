@@ -55,7 +55,7 @@ pub struct ListNft<'info> {
     pub rent: Sysvar<'info, Rent>,
 }
 
-pub fn list_nft(ctx: Context<ListNft>) -> Result<()> {
+pub fn list_nft(ctx: Context<ListNft>, amount: u64) -> Result<()> {
     // Proceed to transfer
     let cpi_program = ctx.accounts.token_program.to_account_info();
     let cpi_accounts = Transfer {
@@ -69,6 +69,8 @@ pub fn list_nft(ctx: Context<ListNft>) -> Result<()> {
     // Populate list_info info
     ctx.accounts.list_info.mint = ctx.accounts.mint.key();
     ctx.accounts.list_info.lister = ctx.accounts.initializer.key();
+    ctx.accounts.list_info.owner = ctx.accounts.initializer.key();
+    ctx.accounts.list_info.amount = amount;
 
     Ok(())
 }

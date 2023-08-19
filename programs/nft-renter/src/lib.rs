@@ -14,8 +14,8 @@ pub mod nft_renter {
         Ok(())
     }
 
-    pub fn list_nft_instruction (ctx: Context<ListNft>) -> Result<()> {
-        list_nft(ctx)?;
+    pub fn list_nft_instruction (ctx: Context<ListNft>, amount: u64) -> Result<()> {
+        list_nft(ctx, amount)?;
         Ok(())
     }
 

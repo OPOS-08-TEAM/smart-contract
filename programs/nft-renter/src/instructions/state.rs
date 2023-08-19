@@ -16,7 +16,9 @@ use anchor_lang::prelude::*;
 #[account]
 pub struct UserListInfo {
     pub lister: Pubkey,
+    pub owner: Pubkey,
     pub mint: Pubkey,
+    pub amount: u64
 }
 
 #[account]

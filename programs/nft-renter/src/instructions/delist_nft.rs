@@ -69,6 +69,5 @@ pub fn delist_nft(ctx: Context<DelistNft>) -> Result<()> {
     };
     let token_transfer_context = CpiContext::new_with_signer(cpi_program, cpi_accounts, signer);
     token::transfer(token_transfer_context, 1)?;
-
     Ok(())
 }

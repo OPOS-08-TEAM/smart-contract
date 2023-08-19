@@ -1,5 +1,6 @@
 use crate::helpers::consts::*;
 use crate::helpers::errors::*;
+use crate::helpers::transfer_native_to_account;
 use crate::instructions::state::*;
 
 use anchor_lang::prelude::*;
@@ -32,58 +33,57 @@ pub struct RentNft<'info> {
     #[account(mut)]
     pub renter: Signer<'info>,
 
-    #[account(
-        init_if_needed,
-        seeds = [
-            RENT_INFO_SEED,
-            renter.key().as_ref(),
-            mint.key().as_ref()
-        ],
-        bump,
-        payer = renter,
-        space = std::mem::size_of::<UserRentInfo>() + 8,
-    )]
-    pub rent_info: Account<'info, UserRentInfo>,
+    // #[account(
+    //     init_if_needed,
+    //     seeds = [
+    //         RENT_INFO_SEED,
+    //         renter.key().as_ref(),
+    //         mint.key().as_ref()
+    //     ],
+    //     bump,
+    //     payer = renter,
+    //     space = std::mem::size_of::<UserRentInfo>() + 8,
+    // )]
+    // pub rent_info: Account<'info, UserRentInfo>,
 
-    #[account(
-        init_if_needed,
-        payer = renter,
-        associated_token::mint = mint,
-        associated_token::authority = rent_info,
-    )]
-    pub pda_rent_account: Account<'info, TokenAccount>,
+    // #[account(
+    //     init_if_needed,
+    //     payer = renter,
+    //     associated_token::mint = mint,
+    //     associated_token::authority = rent_info,
+    // )]
+    // pub pda_rent_account: Account<'info, TokenAccount>,
 
     // mint is required to create new account for PDA and for checking
     pub mint: Account<'info, Mint>,
 
-    // Token Program required to call transfer instruction
-    pub token_program: Program<'info, Token>,
+    // // Token Program required to call transfer instruction
+    // pub token_program: Program<'info, Token>,
 
-    // ATA Program required to create ATA for pda_nft_account
-    pub associated_token_program: Program<'info, AssociatedToken>,
+    // // ATA Program required to create ATA for pda_nft_account
+    // pub associated_token_program: Program<'info, AssociatedToken>,
 
     // System Program requred since a new account may be created and there's a deduction of lamports (fees/rent)
     pub system_program: Program<'info, System>,
     
-    // Rent required to get Rent
-    pub rent: Sysvar<'info, Rent>,
+    // // Rent required to get Rent
+    // pub rent: Sysvar<'info, Rent>,
 }
 
 pub fn rent_nft(ctx: Context<RentNft>) -> Result<()> {
-    // Procedd to renting nft
-    let cpi_program = ctx.accounts.token_program.to_account_info();
-    let cpi_accounts = Transfer {
-        from: ctx.accounts.pda_nft_account.to_account_info(),
-        to: ctx.accounts.pda_rent_account.to_account_info(),
-        authority: ctx.accounts.lister.to_account_info(),
-    };
-
-    let token_transfer_context: CpiContext<'_, '_, '_, '_, Transfer<'_>> = CpiContext::new(cpi_program, cpi_accounts);
-    token::transfer(token_transfer_context, 1)?;
+    // Proceed to renting nft
+    let amount = ctx.accounts.list_info.amount;
+    let seeds = None;
+    transfer_native_to_account(
+        ctx.accounts.renter.to_account_info(), 
+        ctx.accounts.lister.to_account_info(), 
+        amount, 
+        ctx.accounts.system_program.to_account_info(), 
+        seeds
+    )?;
 
     // Assign rent info 
-    ctx.accounts.rent_info.renter = ctx.accounts.rent.key();
-    ctx.accounts.rent_info.mint = ctx.accounts.mint.key();
+    ctx.accounts.list_info.owner = ctx.accounts.renter.key();
 
     Ok(())
 }
